@@ -1,3 +1,0 @@
-module.exports=[62145,a=>{"use strict";var b=a.i(87924),c=a.i(72131),d=a.i(46271),e=a.i(13582);function f(){let[a,f]=(0,c.useState)(null),[g,h]=(0,c.useState)("");return(0,b.jsxs)("div",{className:"space-y-4",children:[(0,b.jsx)(d.motion.h2,{variants:e.fadeInUp,initial:"hidden",animate:"show",className:"text-2xl font-semibold",children:"Upload"}),(0,b.jsx)("input",{type:"file",onChange:a=>f(a.target.files?.[0]??null)}),(0,b.jsx)("button",{className:"rounded bg-black text-white px-4 py-2",onClick:()=>h(a?"Uploaded (stub)":"Select a file"),children:"Send"}),g&&(0,b.jsx)("p",{className:"text-sm text-gray-600",children:g})]})}a.s(["default",()=>f])}];
-
-//# sourceMappingURL=app_%28site%29_upload_page_tsx_b028c951._.js.map

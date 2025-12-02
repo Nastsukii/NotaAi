@@ -2,12 +2,12 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Upload, FileText, CheckCircle, Clock, DollarSign, Users, BookOpen, Search, AlertCircle, FileCheck, Loader2, X, Copy, Check, File, Trash2, Plus, PenTool, LayoutTemplate } from 'lucide-react'
 
-const Card = ({ children, className = "" }) => (
+const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden ${className}`}>{children}</div>
 )
 
-const Badge = ({ children, color = "blue" }) => {
-  const colors = {
+const Badge = ({ children, color = "blue" }: { children: React.ReactNode; color?: string }) => {
+  const colors: Record<string, string> = {
     blue: "bg-blue-100 text-blue-700",
     green: "bg-green-100 text-green-700",
     amber: "bg-amber-100 text-amber-700",
@@ -17,7 +17,7 @@ const Badge = ({ children, color = "blue" }) => {
   return <span className={`px-2 py-1 rounded-md text-xs font-medium ${colors[color] || colors.blue}`}>{children}</span>
 }
 
-const fileToBase64 = (file) => new Promise((resolve, reject) => {
+const fileToBase64 = (file: File) => new Promise((resolve, reject) => {
   const reader = new FileReader()
   reader.readAsDataURL(file)
   reader.onload = () => {
@@ -27,7 +27,7 @@ const fileToBase64 = (file) => new Promise((resolve, reject) => {
   reader.onerror = (err) => reject(err)
 })
 
-const callGeminiAPI = async (files) => {
+const callGeminiAPI = async (files: File[]) => {
   const processed = await Promise.all(files.map(fileToBase64))
   const prompt = `
     Analise os arquivos fornecidos (que podem ser múltiplas páginas de um mesmo documento ou documentos relacionados de um registro de imóvel).
@@ -43,13 +43,13 @@ const callGeminiAPI = async (files) => {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('analysis')
-  const [files, setFiles] = useState([])
+  const [files, setFiles] = useState<File[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [status, setStatus] = useState('idle')
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<any>(null)
   const [errorMessage, setErrorMessage] = useState("")
   const [copied, setCopied] = useState(false)
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [genData, setGenData] = useState({
     dataLavratura: "",
@@ -78,18 +78,18 @@ export default function App() {
     setGeneratedText(texto)
   }, [genData])
 
-  const handleGenChange = (e) => {
+  const handleGenChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setGenData(prev => ({ ...prev, [name]: value }))
   }
 
   const copyGeneratedText = () => { navigator.clipboard.writeText(generatedText); setGenCopied(true); setTimeout(() => setGenCopied(false), 2000) }
 
-  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true) }
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(true) }
   const handleDragLeave = () => { setIsDragging(false) }
-  const handleDrop = (e) => { e.preventDefault(); setIsDragging(false); addFiles(Array.from(e.dataTransfer.files)) }
-  const handleFileSelect = (e) => { if (e.target.files?.length > 0) addFiles(Array.from(e.target.files)) }
-  const addFiles = (newFiles) => {
+  const handleDrop = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(false); addFiles(Array.from(e.dataTransfer.files)) }
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => { if (e.target.files && e.target.files.length > 0) addFiles(Array.from(e.target.files)) }
+  const addFiles = (newFiles: File[]) => {
     const validFiles = newFiles.filter(file => file.type.includes('image') || file.type === 'application/pdf')
     if (validFiles.length !== newFiles.length) alert("Apenas imagens e PDFs são permitidos.")
     if (validFiles.length > 0) {
@@ -97,7 +97,7 @@ export default function App() {
       if (status === 'complete' || status === 'error') { setStatus('idle'); setResult(null) }
     }
   }
-  const removeFile = (idx) => setFiles(prev => prev.filter((_, i) => i !== idx))
+  const removeFile = (idx: number) => setFiles(prev => prev.filter((_, i) => i !== idx))
   const startProcessing = async () => {
     if (files.length === 0) return
     setStatus('processing'); setResult(null); setErrorMessage("")

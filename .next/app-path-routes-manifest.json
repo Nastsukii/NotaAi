@@ -1,9 +1,0 @@
-{
-  "/(site)/generate/page": "/generate",
-  "/(site)/page": "/",
-  "/(site)/review/page": "/review",
-  "/(site)/upload/page": "/upload",
-  "/_global-error/page": "/_global-error",
-  "/_not-found/page": "/_not-found",
-  "/api/ai/route": "/api/ai"
-}
