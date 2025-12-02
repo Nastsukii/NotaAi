@@ -1,0 +1,9 @@
+{
+  "/(site)/generate/page": "app/(site)/generate/page.js",
+  "/(site)/page": "app/(site)/page.js",
+  "/(site)/review/page": "app/(site)/review/page.js",
+  "/(site)/upload/page": "app/(site)/upload/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/ai/route": "app/api/ai/route.js"
+}

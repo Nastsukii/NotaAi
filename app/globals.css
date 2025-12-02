@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 255 255 255;
+  --fg: 17 24 39;
+}
+
+html, body, #__next { height: 100%; }
+body { color: rgb(var(--fg)); background: rgb(var(--bg)); }
+
+.animate-fade-in { animation: fade-in 300ms ease-out both; }
+.animate-slide-up { animation: slide-up 300ms ease-out both; }
+
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
