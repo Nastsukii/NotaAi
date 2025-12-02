@@ -51,9 +51,13 @@ async function POST(req) {
     }), {
         status: 400
     });
-    const provider = process.env.AI_PROVIDER || 'openai';
     const openaiKey = process.env.OPENAI_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
+    let provider = process.env.AI_PROVIDER;
+    if (!provider) {
+        if (geminiKey) provider = 'gemini';
+        else if (openaiKey) provider = 'openai';
+    }
     if (provider === 'openai' && !openaiKey) return new Response(JSON.stringify({
         error: 'Missing OPENAI_API_KEY'
     }), {
@@ -108,7 +112,7 @@ async function POST(req) {
                     ]
                 }
             ];
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiKey}`, {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,7 +140,11 @@ async function POST(req) {
                 });
             }
             const json = await res.json();
-            const textResponse = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+            let textResponse = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+            // Clean up markdown code blocks if present
+            if (textResponse && typeof textResponse === 'string') {
+                textResponse = textResponse.replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+            }
             const output = textResponse ? JSON.parse(textResponse) : json;
             console.log('[AI DEBUG] Gemini success', {
                 has_output: Boolean(output)
@@ -188,7 +196,10 @@ async function POST(req) {
                 });
             }
             const json = await res.json();
-            const content = json?.choices?.[0]?.message?.content;
+            let content = json?.choices?.[0]?.message?.content;
+            if (typeof content === 'string') {
+                content = content.replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+            }
             const output = typeof content === 'string' ? JSON.parse(content) : content || json;
             console.log('[AI DEBUG] OpenAI success', {
                 has_output: Boolean(output)

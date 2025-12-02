@@ -161,7 +161,7 @@ function App() {
         addFiles(Array.from(e.dataTransfer.files));
     };
     const handleFileSelect = (e)=>{
-        if (e.target.files?.length > 0) addFiles(Array.from(e.target.files));
+        if (e.target.files && e.target.files.length > 0) addFiles(Array.from(e.target.files));
     };
     const addFiles = (newFiles)=>{
         const validFiles = newFiles.filter((file)=>file.type.includes('image') || file.type === 'application/pdf');

@@ -112,10 +112,10 @@ export default function App() {
           livro: payload.registro?.livro || "",
           cidadeCartorio: payload.metadata?.cartorio?.split(" - ")[0] || "",
           tipoVendedor: "os proprietários",
-          vendedores: payload.partes?.vendedores?.map(v => v.nome).join(", ") || "",
+          vendedores: payload.partes?.vendedores?.map((v: any) => v.nome).join(", ") || "",
           valor: payload.transacao?.valor || "",
           dataVenda: payload.transacao?.dataVenda || "",
-          compradores: payload.partes?.compradores?.map(c => `${c.nome} (${c.qualificacao})`).join(", ") || ""
+          compradores: payload.partes?.compradores?.map((c: any) => `${c.nome} (${c.qualificacao})`).join(", ") || ""
         })
       }
     } catch (error) {

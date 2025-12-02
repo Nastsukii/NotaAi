@@ -5,9 +5,15 @@ export async function POST(req: NextRequest) {
   const prompt = String(body?.prompt || '')
   const files = Array.isArray(body?.files) ? body.files : []
   if (!prompt) return new Response(JSON.stringify({ error: 'Missing prompt' }), { status: 400 })
-  const provider = process.env.AI_PROVIDER || 'openai'
   const openaiKey = process.env.OPENAI_API_KEY
   const geminiKey = process.env.GEMINI_API_KEY
+  
+  let provider = process.env.AI_PROVIDER
+  if (!provider) {
+    if (geminiKey) provider = 'gemini'
+    else if (openaiKey) provider = 'openai'
+  }
+
   if (provider === 'openai' && !openaiKey) return new Response(JSON.stringify({ error: 'Missing OPENAI_API_KEY' }), { status: 500 })
   if (provider === 'gemini' && !geminiKey) return new Response(JSON.stringify({ error: 'Missing GEMINI_API_KEY' }), { status: 500 })
 
@@ -32,7 +38,7 @@ export async function POST(req: NextRequest) {
           ]
         }
       ]
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents, generationConfig: { responseMimeType: 'application/json' } })
